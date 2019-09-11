@@ -36,9 +36,40 @@ class MarketTest < Minitest::Test
   end
 
   def test_it_can_find_vendors_that_sell_a_specific_item
+    @market.add_vendor(@vendor1)
+    @market.add_vendor(@vendor2)
     @vendor1.stock("Peaches", 35)
     @vendor1.stock("Tomatoes", 7)
     @vendor2.stock("Banana Nice Cream", 50)
     @vendor2.stock("Peaches", 2)
+
+    assert_equal [@vendor2], @market.vendors_that_sell("Banana Nice Cream")
+    assert_equal [@vendor1, @vendor2], @market.vendors_that_sell("Peaches")
   end
+
+  def test_it_can_return_a_sorted_item_list
+    @market.add_vendor(@vendor1)
+    @market.add_vendor(@vendor2)
+    @vendor1.stock("Peaches", 35)
+    @vendor1.stock("Tomatoes", 7)
+    @vendor2.stock("Banana Nice Cream", 50)
+    @vendor2.stock("Peaches", 2)
+
+    expected = ["Banana Nice Cream", "Peaches", "Tomatoes"]
+    assert_equal expected, @market.sorted_item_list
+  end
+
+  def test_it_can_return_total_inventory
+    @market.add_vendor(@vendor1)
+    @market.add_vendor(@vendor2)
+    @vendor1.stock("Peaches", 35)
+    @vendor1.stock("Tomatoes", 7)
+    @vendor2.stock("Banana Nice Cream", 50)
+    @vendor2.stock("Peaches", 2)
+
+    expected = {"Peaches" => 37, "Tomatoes" => 7, "Banana Nice Cream" => 50}
+    assert_equal expected, @market.total_inventory
+  end
+
+
 end
