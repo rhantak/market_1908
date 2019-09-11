@@ -40,4 +40,21 @@ class Market
     end
     total_inv
   end
+
+  def sell(item, amount)
+    if total_inventory[item] < amount
+      false
+    else
+      remaining_order = amount
+      vendors_that_sell(item).each do |vendor|
+        if remaining_order >= vendor.inventory[item]
+          remaining_order -= vendor.inventory[item]
+          vendor.inventory[item] = 0
+        elsif remaining_order < vendor.inventory[item]
+          vendor.inventory[item] -= remaining_order
+          remaining_order = 0
+        end
+      end
+    end
+  end
 end
